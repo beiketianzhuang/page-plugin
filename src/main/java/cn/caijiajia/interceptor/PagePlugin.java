@@ -3,7 +3,9 @@ package cn.caijiajia.interceptor;
 import java.sql.Connection;
 import java.util.Properties;
 
+import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -22,6 +24,27 @@ public class PagePlugin<T> implements Interceptor{
 	public Object intercept(Invocation invocation) throws Throwable {
 		StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
 		MetaObject metaObject = SystemMetaObject.forObject(statementHandler);
+		if (metaObject.hasGetter("id")) {
+			System.out.println(metaObject.getValue("id"));
+			
+			
+		}
+		String[] strings = metaObject.getGetterNames();
+		System.out.println(strings);
+		for (String str : strings) {
+			System.out.println(str);
+		}
+		
+		if(metaObject.hasGetter("parameterHandler")) {
+			ParameterHandler parameterHandler = (ParameterHandler) metaObject.getValue("parameterHandler");
+			System.out.println(parameterHandler.getParameterObject());
+		};
+		
+		if(metaObject.hasGetter("boundSql")) {
+			BoundSql boundSql = (BoundSql) metaObject.getValue("boundSql");
+			System.out.println(boundSql.getSql());
+		};
+		
 		String sql = (String) metaObject.getValue("delegate.boundSql.sql");
 		Integer pageNum = null;
 		Integer pageSize = null;
@@ -33,8 +56,12 @@ public class PagePlugin<T> implements Interceptor{
 		if (pageNum != null && pageSize != null) {
 			sql = sql+" limit "+(pageNum-1)*pageSize+","+pageSize+"";	
 		}
-		System.out.println(sql);
-		// TODO Auto-generated method stub
+		
+		if (metaObject.hasGetter("delegate")) {
+			StatementHandler statementHandler2 = (StatementHandler) metaObject.getValue("delegate");
+			System.out.println(statementHandler2);
+		}
+		metaObject.setValue("delegate.boundSql.sql", sql);
 		return invocation.proceed();
 	}
 

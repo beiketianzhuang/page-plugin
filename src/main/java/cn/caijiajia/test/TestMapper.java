@@ -2,6 +2,7 @@ package cn.caijiajia.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -30,9 +31,9 @@ public class TestMapper {
 		
 		SqlSession session = sqlSessionFactory.openSession();
 		BaseMapper baseMapper = session.getMapper(BaseMapper.class);
-		PagePlugin.startPage(1, 4);
-		Time time = baseMapper.selectBase(1);
-		System.out.println(time);
+		PagePlugin.startPage(1, 3);
+		List<Time> times = baseMapper.selectBase(1);
+		System.out.println(times);
 		
 	}
 

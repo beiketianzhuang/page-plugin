@@ -1,7 +1,9 @@
 package cn.caijiajia.mapper;
 
+import java.util.List;
+
 import cn.caijiajia.domain.Time;
 
 public interface BaseMapper {
-	Time selectBase(int id);
+	List<Time> selectBase(int id);
 }
